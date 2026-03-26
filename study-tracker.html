@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متابعة الدراسة</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        /* Subject Section Styles */
+        .subject-section {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .subject-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+        
+        /* Biology - Yellow Theme */
+        .biology { --primary-color: #FFC107; --secondary-color: #FFF8E1; --progress-bg: #FFECB3; }
+        .biology .day-count { color: #FFC107; }
+        .biology .number-badge { background: linear-gradient(135deg, #FFC107, #FFB300); }
+        .biology .progress-bar { background: linear-gradient(90deg, #FFC107, #FFB300); }
+        .biology .subject-title { color: #FFC107; }
+        .biology .checkbox.checked { background: #FFC107; border-color: #FFC107; }
+        
+        /* Chemistry - Purple Theme */
+        .chemistry { --primary-color: #9C27B0; --secondary-color: #F3E5F5; --progress-bg: #E1BEE7; }
+        .chemistry .day-count { color: #9C27B0; }
+        .chemistry .number-badge { background: linear-gradient(135deg, #9C27B0, #7B1FA2); }
+        .chemistry .progress-bar { background: linear-gradient(90deg, #9C27B0, #7B1FA2); }
+        .chemistry .subject-title { color: #9C27B0; }
+        .chemistry .checkbox.checked { background: #9C27B0; border-color: #9C27B0; }
+        
+        /* Physics - Green Theme */
+        .physics { --primary-color: #4CAF50; --secondary-color: #E8F5E9; --progress-bg: #C8E6C9; }
+        .physics .day-count { color: #4CAF50; }
+        .physics .number-badge { background: linear-gradient(135deg, #4CAF50, #388E3C); }
+        .physics .progress-bar { background: linear-gradient(90deg, #4CAF50, #388E3C); }
+        .physics .subject-title { color: #4CAF50; }
+        .physics .checkbox.checked { background: #4CAF50; border-color: #4CAF50; }
+        
+        /* Math - Blue Theme */
+        .math { --primary-color: #2196F3; --secondary-color: #E3F2FD; --progress-bg: #BBDEFB; }
+        .math .day-count { color: #2196F3; }
+        .math .number-badge { background: linear-gradient(135deg, #2196F3, #1976D2); }
+        .math .progress-bar { background: linear-gradient(90deg, #2196F3, #1976D2); }
+        .math .subject-title { color: #2196F3; }
+        .math .checkbox.checked { background: #2196F3; border-color: #2196F3; }
+        
+        /* Header Styles */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        
+        .day-count-box {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 12px 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .day-count {
+            font-size: 36px;
+            font-weight: bold;
+            line-height: 1;
+        }
+        
+        .day-label {
+            font-size: 18px;
+            color: #666;
+            font-weight: 600;
+        }
+        
+        .subject-title {
+            font-size: 32px;
+            font-weight: 800;
+        }
+        
+        /* Lessons List */
+        .lessons-list {
+            position: relative;
+        }
+        
+        .lessons-list::before {
+            content: '';
+            position: absolute;
+            right: 28px;
+            top: 20px;
+            bottom: 20px;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--primary-color), transparent);
+            opacity: 0.3;
+        }
+        
+        .lesson-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .lesson-item:hover {
+            background: var(--secondary-color);
+            border-radius: 10px;
+            padding-right: 10px;
+            margin-right: -10px;
+        }
+        
+        .lesson-content {
+            flex: 1;
+            text-align: right;
+            padding: 0 15px;
+        }
+        
+        .lesson-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        
+        .lesson-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .lesson-tag {
+            font-size: 11px;
+            color: #888;
+            background: #f5f5f5;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        
+        /* Checkbox */
+        .checkbox-wrapper {
+            margin-left: 15px;
+        }
+        
+        .checkbox {
+            width: 28px;
+            height: 28px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            background: white;
+        }
+        
+        .checkbox:hover {
+            border-color: var(--primary-color);
+            transform: scale(1.1);
+        }
+        
+        .checkbox.checked {
+            transform: scale(1);
+        }
+        
+        .checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        /* Number Badge */
+        .number-badge {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .progress-wrapper {
+            background: #f0f0f0;
+            border-radius: 10px;
+            height: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* Animation for check */
+        @keyframes checkPop {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .checkbox.checked {
+            animation: checkPop 0.4s ease;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .subjects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .subject-title {
+                font-size: 24px;
+            }
+            
+            .day-count {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="subjects-grid">
+            <!-- Biology Section -->
+            <div class="subject-section biology" data-subject="biology">
+                <div class="section-header">
+                    <div class="day-count-box">
+                        <div class="day-count">11</div>
+                        <div class="day-label">أيام</div>
+                    </div>
+                    <h2 class="subject-title">جدول الأحياء</h2>
+                </div>
+                <div class="lessons-list" id="biology-lessons">
+                    <!-- Lessons will be inserted by JavaScript -->
+                </div>
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span>نسبة الإنجاز</span>
+                        <span class="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-wrapper">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Chemistry Section -->
+            <div class="subject-section chemistry" data-subject="chemistry">
+                <div class="section-header">
+                    <div class="day-count-box">
+                        <div class="day-count">9</div>
+                        <div class="day-label">أيام</div>
+                    </div>
+                    <h2 class="subject-title">جدول الكيمياء</h2>
+                </div>
+                <div class="lessons-list" id="chemistry-lessons">
+                    <!-- Lessons will be inserted by JavaScript -->
+                </div>
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span>نسبة الإنجاز</span>
+                        <span class="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-wrapper">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Physics Section -->
+            <div class="subject-section physics" data-subject="physics">
+                <div class="section-header">
+                    <div class="day-count-box">
+                        <div class="day-count">9</div>
+                        <div class="day-label">أيام</div>
+                    </div>
+                    <h2 class="subject-title">جدول الفيزياء</h2>
+                </div>
+                <div class="lessons-list" id="physics-lessons">
+                    <!-- Lessons will be inserted by JavaScript -->
+                </div>
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span>نسبة الإنجاز</span>
+                        <span class="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-wrapper">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Math Section -->
+            <div class="subject-section math" data-subject="math">
+                <div class="section-header">
+                    <div class="day-count-box">
+                        <div class="day-count">11</div>
+                        <div class="day-label">أيام</div>
+                    </div>
+                    <h2 class="subject-title">جدول الرياضيات</h2>
+                </div>
+                <div class="lessons-list" id="math-lessons">
+                    <!-- Lessons will be inserted by JavaScript -->
+                </div>
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span>نسبة الإنجاز</span>
+                        <span class="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-wrapper">
+                        <div class="progress-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data for all subjects
+        const subjectsData = {
+            biology: {
+                lessons: [
+                    { title: "دراسة الحياة إلى الفطريات", tags: ["1 أحياء", "أول ثانوي"] },
+                    { title: "تنظيم التمثيل إلى المفصليات", tags: ["1 أحياء"] },
+                    { title: "شوكيات الجلد واللافقاريات الحبلية إلى الثدييات", tags: ["2 أحياء", "ثاني ثانوي"] },
+                    { title: "النباتات كاملة", tags: ["2 أحياء"] },
+                    { title: "الجهاز الهيكلي إلى الجهاز الدوراني", tags: ["3 أحياء", "ثالث ثانوي"] },
+                    { title: "الجهاز التنفسي والإخراجي إلى جهاز الغدد الصم", tags: ["3 أحياء"] },
+                    { title: "جهاز التكاثر في الإنسان إلى التراكيب الخلوية", tags: ["3 أحياء", "4 أحياء"] },
+                    { title: "كيمياء الخلية إلى التكاثر الخلوي", tags: ["4 أحياء"] },
+                    { title: "الانقسام المنصف إلى الوراثة المعقدة والبشرية", tags: ["4 أحياء"] },
+                    { title: "المادة الوراثية إلى المجتمعات والمناطق الحيوية", tags: ["4 أحياء", "علم البيئة"] },
+                    { title: "الأنظمة البيئية المائية إلى سلوك الحيوان", tags: ["4 أحياء", "علم البيئة"] }
+                ]
+            },
+            chemistry: {
+                lessons: [
+                    { title: "مقدمة في علم الكيمياء إلى العنصر والمركب والتفاعلات", tags: ["1 كيمياء", "أول ثانوي"] },
+                    { title: "الحسابات الكيميائية إلى تصنيف العناصر وتدرج الخواص", tags: ["1 كيمياء", "أول ثانوي", "2 كيمياء", "ثاني ثانوي"] },
+                    { title: "الروابط والمركبات الأيونية إلى تراكيب لويس", tags: ["2 كيمياء", "ثاني ثانوي"] },
+                    { title: "الكهروسالبية والقوى بين الجزيئات إلى الطاقة والكيمياء الحرارية", tags: ["2 كيمياء", "ثاني ثانوي", "3 كيمياء"] },
+                    { title: "تغيرات الحالة الفيزيائية إلى الاتزان الكيميائي", tags: ["3 كيمياء", "ثاني ثانوي"] },
+                    { title: "الهيدروكربونات إلى مشتقات الهيدروكربونات", tags: ["4 كيمياء", "ثاني ثانوي"] },
+                    { title: "تفاعلات المشتقات إلى قوانين وحسابات الغازات", tags: ["4 كيمياء", "ثاني ثانوي"] },
+                    { title: "المخاليط وتركيز المحلول إلى الأحماض والقواعد", tags: ["5 كيمياء", "ثالث ثانوي"] },
+                    { title: "الأكسدة والاختزال إلى البطاريات والتحليل الكهربائي", tags: ["5 كيمياء", "ثالث ثانوي"] }
+                ]
+            },
+            physics: {
+                lessons: [
+                    { title: "مدخل إلى علم الفيزياء إلى القوى والوزن وقوانين نيوتن", tags: ["أول ثانوي"] },
+                    { title: "المتجهات والاحتكاك إلى الحركة الدورانية", tags: ["أول ثانوي", "ثاني ثانوي"] },
+                    { title: "الاتزان والدفع والزخم إلى الحرارة", tags: ["ثاني ثانوي"] },
+                    { title: "تغيرات الحالة إلى دوبلر والرنين في الأعمدة", tags: ["ثاني ثانوي", "ثالث ثانوي"] },
+                    { title: "الضوء والألوان إلى التداخل والحيود", tags: ["ثالث ثانوي"] },
+                    { title: "الكهرباء الساكنة - المجالات الكهربائية - الدوائر الكهربائية", tags: ["ثالث ثانوي"] },
+                    { title: "المجالات والقوى المغناطيسية إلى الحث الكهرومغناطيسي", tags: ["ثالث ثانوي"] },
+                    { title: "الكهرومغناطيسية إلى الذرة", tags: ["ثالث ثانوي"] },
+                    { title: "إلكترونيات الحالة الصلبة - الفيزياء النووية", tags: ["ثالث ثانوي"] }
+                ]
+            },
+            math: {
+                lessons: [
+                    { title: "التبرير والبرهان إلى المثلث", tags: ["أول ثانوي"] },
+                    { title: "المضلعات والأشكال الرباعية إلى الدائرة", tags: ["أول ثانوي"] },
+                    { title: "الأعداد الحقيقية والدوال إلى المصفوفات", tags: ["ثاني ثانوي"] },
+                    { title: "الأعداد المركبة والمعادلة التربيعية إلى الدالة الجذرية", tags: ["ثاني ثانوي"] },
+                    { title: "العلاقات والدوال النسبية إلى الاحتمالات", tags: ["ثاني ثانوي"] },
+                    { title: "حساب المثلثات إلى الدوال الأسية واللوغاريتمية", tags: ["ثاني ثانوي"] },
+                    { title: "المتطابقات المثلثية - القطوع", tags: ["ثالث ثانوي"] },
+                    { title: "المتجهات - الإحداثيات القطبية والديكارتية", tags: ["ثالث ثانوي"] },
+                    { title: "الإحصاء - النهايات", tags: ["ثالث ثانوي"] },
+                    { title: "الاشتقاق والتكامل", tags: ["ثالث ثانوي"] },
+                    { title: "الاشتقاق والتكامل", tags: ["ثالث ثانوي"] }
+                ]
+            }
+        };
+        
+        // Load saved progress from localStorage
+        function loadProgress() {
+            const saved = localStorage.getItem('studyProgress');
+            return saved ? JSON.parse(saved) : {};
+        }
+        
+        // Save progress to localStorage
+        function saveProgress(progress) {
+            localStorage.setItem('studyProgress', JSON.stringify(progress));
+        }
+        
+        // Render lessons for a subject
+        function renderLessons(subjectId, lessonsData) {
+            const container = document.getElementById(`${subjectId}-lessons`);
+            const progress = loadProgress();
+            
+            lessonsData.forEach((lesson, index) => {
+                const lessonId = `${subjectId}-lesson-${index}`;
+                const isChecked = progress[lessonId] || false;
+                
+                const lessonItem = document.createElement('div');
+                lessonItem.className = 'lesson-item';
+                
+                const tagsHtml = lesson.tags.map(tag => 
+                    `<span class="lesson-tag">${tag}</span>`
+                ).join('');
+                
+                lessonItem.innerHTML = `
+                    <div class="number-badge">${index + 1}</div>
+                    <div class="lesson-content">
+                        <div class="lesson-title">${lesson.title}</div>
+                        <div class="lesson-tags">${tagsHtml}</div>
+                    </div>
+                    <div class="checkbox-wrapper">
+                        <div class="checkbox ${isChecked ? 'checked' : ''}" data-lesson-id="${lessonId}"></div>
+                    </div>
+                `;
+                
+                container.appendChild(lessonItem);
+            });
+            
+            updateProgress(subjectId);
+        }
+        
+        // Update progress bar
+        function updateProgress(subjectId) {
+            const section = document.querySelector(`[data-subject="${subjectId}"]`);
+            const checkboxes = section.querySelectorAll('.checkbox');
+            const checkedCount = section.querySelectorAll('.checkbox.checked').length;
+            const totalCount = checkboxes.length;
+            const percentage = Math.round((checkedCount / totalCount) * 100);
+            
+            const progressBar = section.querySelector('.progress-bar');
+            const progressPercent = section.querySelector('.progress-percent');
+            
+            progressBar.style.width = `${percentage}%`;
+            progressPercent.textContent = `${percentage}%`;
+        }
+        
+        // Toggle checkbox
+        function toggleCheckbox(checkbox) {
+            checkbox.classList.toggle('checked');
+            const lessonId = checkbox.dataset.lessonId;
+            const progress = loadProgress();
+            progress[lessonId] = checkbox.classList.contains('checked');
+            saveProgress(progress);
+            
+            // Extract subject ID from lesson ID
+            const subjectId = lessonId.split('-lesson-')[0];
+            updateProgress(subjectId);
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Render all subjects
+            Object.keys(subjectsData).forEach(subjectId => {
+                renderLessons(subjectId, subjectsData[subjectId].lessons);
+            });
+            
+            // Add click handlers to checkboxes
+            document.querySelectorAll('.checkbox').forEach(checkbox => {
+                checkbox.addEventListener('click', () => toggleCheckbox(checkbox));
+            });
+        });
+    </script>
+</body>
+</html>
