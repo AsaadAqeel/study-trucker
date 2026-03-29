@@ -50,6 +50,12 @@
         .biology .progress-bar { background: linear-gradient(90deg, #FFC107, #FFB300); }
         .biology .subject-title { color: #FFC107; }
         .biology .checkbox.checked { background: #FFC107; border-color: #FFC107; }
+        .biology .note-btn { color: #FFC107; }
+        .biology .note-btn.has-note { background: #FFC107; color: white; }
+        .biology .note-btn:hover { background: #FFC107; color: white; }
+        .biology .note-box { border-right: 4px solid #FFC107; }
+        .biology .note-textarea:focus { border-color: #FFC107; }
+        .biology .btn-save { background: #FFC107; }
         
         /* Chemistry - Purple Theme */
         .chemistry { --primary-color: #9C27B0; --secondary-color: #F3E5F5; --progress-bg: #E1BEE7; }
@@ -58,6 +64,12 @@
         .chemistry .progress-bar { background: linear-gradient(90deg, #9C27B0, #7B1FA2); }
         .chemistry .subject-title { color: #9C27B0; }
         .chemistry .checkbox.checked { background: #9C27B0; border-color: #9C27B0; }
+        .chemistry .note-btn { color: #9C27B0; }
+        .chemistry .note-btn.has-note { background: #9C27B0; color: white; }
+        .chemistry .note-btn:hover { background: #9C27B0; color: white; }
+        .chemistry .note-box { border-right: 4px solid #9C27B0; }
+        .chemistry .note-textarea:focus { border-color: #9C27B0; }
+        .chemistry .btn-save { background: #9C27B0; }
         
         /* Physics - Green Theme */
         .physics { --primary-color: #4CAF50; --secondary-color: #E8F5E9; --progress-bg: #C8E6C9; }
@@ -66,6 +78,12 @@
         .physics .progress-bar { background: linear-gradient(90deg, #4CAF50, #388E3C); }
         .physics .subject-title { color: #4CAF50; }
         .physics .checkbox.checked { background: #4CAF50; border-color: #4CAF50; }
+        .physics .note-btn { color: #4CAF50; }
+        .physics .note-btn.has-note { background: #4CAF50; color: white; }
+        .physics .note-btn:hover { background: #4CAF50; color: white; }
+        .physics .note-box { border-right: 4px solid #4CAF50; }
+        .physics .note-textarea:focus { border-color: #4CAF50; }
+        .physics .btn-save { background: #4CAF50; }
         
         /* Math - Blue Theme */
         .math { --primary-color: #2196F3; --secondary-color: #E3F2FD; --progress-bg: #BBDEFB; }
@@ -74,6 +92,12 @@
         .math .progress-bar { background: linear-gradient(90deg, #2196F3, #1976D2); }
         .math .subject-title { color: #2196F3; }
         .math .checkbox.checked { background: #2196F3; border-color: #2196F3; }
+        .math .note-btn { color: #2196F3; }
+        .math .note-btn.has-note { background: #2196F3; color: white; }
+        .math .note-btn:hover { background: #2196F3; color: white; }
+        .math .note-box { border-right: 4px solid #2196F3; }
+        .math .note-textarea:focus { border-color: #2196F3; }
+        .math .btn-save { background: #2196F3; }
         
         /* Header Styles */
         .section-header {
@@ -129,10 +153,11 @@
         
         .lesson-item {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             padding: 12px 0;
             position: relative;
             transition: all 0.3s ease;
+            flex-wrap: wrap;
         }
         
         .lesson-item:hover {
@@ -140,6 +165,13 @@
             border-radius: 10px;
             padding-right: 10px;
             margin-right: -10px;
+        }
+        
+        .lesson-main {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            width: 100%;
         }
         
         .lesson-content {
@@ -216,6 +248,125 @@
             font-size: 16px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.2);
             z-index: 1;
+            flex-shrink: 0;
+        }
+        
+        /* Note Button */
+        .note-btn-wrapper {
+            margin-left: 8px;
+        }
+        
+        .note-btn {
+            width: 28px;
+            height: 28px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        .note-btn:hover {
+            border-color: var(--primary-color);
+            transform: scale(1.1);
+        }
+        
+        .note-btn.has-note {
+            border-color: transparent;
+        }
+        
+        /* Note Box */
+        .note-box {
+            width: 100%;
+            margin-top: 10px;
+            padding: 15px;
+            background: var(--secondary-color);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .note-textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 15px;
+            resize: vertical;
+            direction: rtl;
+            text-align: right;
+            transition: border-color 0.3s ease;
+        }
+        
+        .note-textarea:focus {
+            outline: none;
+        }
+        
+        .note-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        .char-counter {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .char-counter.warning {
+            color: #f44336;
+            font-weight: bold;
+        }
+        
+        .note-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-save, .btn-cancel {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-save {
+            color: white;
+        }
+        
+        .btn-save:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+        
+        .btn-cancel {
+            background: #f5f5f5;
+            color: #666;
+        }
+        
+        .btn-cancel:hover {
+            background: #e0e0e0;
         }
         
         /* Progress Bar */
@@ -287,6 +438,14 @@
             
             .day-count {
                 font-size: 28px;
+            }
+            
+            .note-box {
+                padding: 10px;
+            }
+            
+            .note-textarea {
+                min-height: 60px;
             }
         }
     </style>
@@ -460,6 +619,29 @@
             localStorage.setItem('studyProgress', JSON.stringify(progress));
         }
         
+        // Load note from localStorage
+        function loadNote(noteId) {
+            const notes = JSON.parse(localStorage.getItem('studyNotes') || '{}');
+            return notes[noteId] || '';
+        }
+        
+        // Save note to localStorage
+        function saveNote(noteId, content) {
+            const notes = JSON.parse(localStorage.getItem('studyNotes') || '{}');
+            if (content.trim()) {
+                notes[noteId] = content;
+            } else {
+                delete notes[noteId];
+            }
+            localStorage.setItem('studyNotes', JSON.stringify(notes));
+        }
+        
+        // Check if note exists
+        function hasNote(noteId) {
+            const notes = JSON.parse(localStorage.getItem('studyNotes') || '{}');
+            return !!notes[noteId];
+        }
+        
         // Render lessons for a subject
         function renderLessons(subjectId, lessonsData) {
             const container = document.getElementById(`${subjectId}-lessons`);
@@ -467,23 +649,35 @@
             
             lessonsData.forEach((lesson, index) => {
                 const lessonId = `${subjectId}-lesson-${index}`;
+                const noteId = `note-${subjectId}-lesson-${index}`;
                 const isChecked = progress[lessonId] || false;
+                const hasExistingNote = hasNote(noteId);
+                const noteContent = loadNote(noteId);
                 
                 const lessonItem = document.createElement('div');
                 lessonItem.className = 'lesson-item';
+                lessonItem.dataset.lessonId = lessonId;
+                lessonItem.dataset.noteId = noteId;
                 
                 const tagsHtml = lesson.tags.map(tag => 
                     `<span class="lesson-tag">${tag}</span>`
                 ).join('');
                 
                 lessonItem.innerHTML = `
-                    <div class="number-badge">${index + 1}</div>
-                    <div class="lesson-content">
-                        <div class="lesson-title">${lesson.title}</div>
-                        <div class="lesson-tags">${tagsHtml}</div>
-                    </div>
-                    <div class="checkbox-wrapper">
-                        <div class="checkbox ${isChecked ? 'checked' : ''}" data-lesson-id="${lessonId}"></div>
+                    <div class="lesson-main">
+                        <div class="number-badge">${index + 1}</div>
+                        <div class="lesson-content">
+                            <div class="lesson-title">${lesson.title}</div>
+                            <div class="lesson-tags">${tagsHtml}</div>
+                        </div>
+                        <div class="note-btn-wrapper">
+                            <div class="note-btn ${hasExistingNote ? 'has-note' : ''}" data-note-id="${noteId}" title="إضافة ملاحظة">
+                                📝
+                            </div>
+                        </div>
+                        <div class="checkbox-wrapper">
+                            <div class="checkbox ${isChecked ? 'checked' : ''}" data-lesson-id="${lessonId}"></div>
+                        </div>
                     </div>
                 `;
                 
@@ -491,6 +685,93 @@
             });
             
             updateProgress(subjectId);
+        }
+        
+        // Toggle note box
+        function toggleNoteBox(noteBtn) {
+            const noteId = noteBtn.dataset.noteId;
+            const lessonItem = noteBtn.closest('.lesson-item');
+            const existingNoteBox = lessonItem.querySelector('.note-box');
+            
+            // Close other open note boxes
+            document.querySelectorAll('.note-box').forEach(box => {
+                if (box !== existingNoteBox) {
+                    box.remove();
+                }
+            });
+            
+            if (existingNoteBox) {
+                existingNoteBox.remove();
+                return;
+            }
+            
+            const noteContent = loadNote(noteId);
+            const noteBox = document.createElement('div');
+            noteBox.className = 'note-box';
+            noteBox.innerHTML = `
+                <textarea class="note-textarea" maxlength="300" placeholder="اكتب ملاحظتك هنا...">${noteContent}</textarea>
+                <div class="note-footer">
+                    <div class="char-counter">${noteContent.length}/300</div>
+                    <div class="note-actions">
+                        <button class="btn-cancel">إلغاء</button>
+                        <button class="btn-save">حفظ</button>
+                    </div>
+                </div>
+            `;
+            
+            lessonItem.appendChild(noteBox);
+            
+            const textarea = noteBox.querySelector('.note-textarea');
+            const charCounter = noteBox.querySelector('.char-counter');
+            const saveBtn = noteBox.querySelector('.btn-save');
+            const cancelBtn = noteBox.querySelector('.btn-cancel');
+            
+            // Focus textarea
+            textarea.focus();
+            
+            // Update character counter
+            textarea.addEventListener('input', () => {
+                const length = textarea.value.length;
+                charCounter.textContent = `${length}/300`;
+                if (length >= 280) {
+                    charCounter.classList.add('warning');
+                } else {
+                    charCounter.classList.remove('warning');
+                }
+            });
+            
+            // Save note
+            saveBtn.addEventListener('click', () => {
+                const content = textarea.value;
+                saveNote(noteId, content);
+                if (content.trim()) {
+                    noteBtn.classList.add('has-note');
+                } else {
+                    noteBtn.classList.remove('has-note');
+                }
+                noteBox.remove();
+            });
+            
+            // Cancel/close note box
+            cancelBtn.addEventListener('click', () => {
+                noteBox.remove();
+            });
+            
+            // Auto-save on blur
+            textarea.addEventListener('blur', () => {
+                setTimeout(() => {
+                    if (!noteBox.matches(':hover') && !saveBtn.matches(':hover') && !cancelBtn.matches(':hover')) {
+                        const content = textarea.value;
+                        saveNote(noteId, content);
+                        if (content.trim()) {
+                            noteBtn.classList.add('has-note');
+                        } else {
+                            noteBtn.classList.remove('has-note');
+                        }
+                        noteBox.remove();
+                    }
+                }, 200);
+            });
         }
         
         // Update progress bar
@@ -528,9 +809,16 @@
                 renderLessons(subjectId, subjectsData[subjectId].lessons);
             });
             
-            // Add click handlers to checkboxes
-            document.querySelectorAll('.checkbox').forEach(checkbox => {
-                checkbox.addEventListener('click', () => toggleCheckbox(checkbox));
+            // Add click handlers using event delegation
+            document.addEventListener('click', (e) => {
+                // Checkbox click
+                if (e.target.classList.contains('checkbox')) {
+                    toggleCheckbox(e.target);
+                }
+                // Note button click
+                else if (e.target.classList.contains('note-btn')) {
+                    toggleNoteBox(e.target);
+                }
             });
         });
     </script>
